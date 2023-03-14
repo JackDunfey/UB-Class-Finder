@@ -10,15 +10,22 @@ function getOpenRoomsByCampus(campus="North"){
             db.all(`SELECT * FROM classes WHERE location = '${campus} Campus'`, (err, courses) => {
                 if(err)
                     throw err;
-                resolve(courses = courses.filter(course=>{
-                        let isTime = !/[^APM\-0-9:\s]+/g.test(course.Time) ? withinTimeRange(timeString, course.Time) : false;
-                        let isDay = course.Days.split(" ").includes(["", "M", "T", "W", "R", "F", "S"][d.getDay()]);
-                        return !(isTime && isDay);
-                    }).map(course=>{
-                        return  {'Until': course.Time.split(" - ")[0], "timeDelta":  timeToNumber(course.Time.split(" - ")[0]) - timeToNumber(timeString), "Room": course.Room}
-                    })//.sort((a,b)=>b.timeDelta - a.timeDelta)
-                    .sort((a,b)=>a.Room.localeCompare(b.Room))
-                );
+                let distinct_least_until = [];
+                courses.filter(course=>{
+                    let isTime = !/[^APM\-0-9:\s]+/g.test(course.Time) ? withinTimeRange(timeString, course.Time) : false;
+                    let isDay = course.Days.split(" ").includes(["", "M", "T", "W", "R", "F", "S"][d.getDay()]);
+                    return !(isTime && isDay);
+                }).forEach(course=>{
+                    let obj = {'Until': course.Time.split(" - ")[0], "timeDelta":  timeToNumber(course.Time.split(" - ")[0]) - timeToNumber(timeString), "Room": course.Room};
+                    if(~(idx=distinct_least_until.findIndex(e=>e.Room==obj.Room))){
+                        if(obj.timeDelta < distinct_least_until[idx].timeDelta)
+                            distinct_least_until[idx] = obj;
+                    } else {
+                        distinct_least_until.push(obj);
+                    }
+                });
+                resolve(distinct_least_until);
+                // .sort((a,b)=>a.Room.localeCompare(b.Room))
             });
         });
         db.close();
