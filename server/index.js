@@ -121,12 +121,25 @@ app.get("/getClass", verifyToken, (req,res)=>{
     db.close();
 });
 
-app.use("/api", require("./api.js"));
+const { api, getOpenRoomsByCampus } = require("./api.js");
+
+app.use("/api", api);
 app.use("/", require("./login.js"));
+
+app.get("/find", verifyToken, async (req, res)=>{
+    res.redirect("/find/North")
+});
+
+app.get("/find/:campus", verifyToken, async (req, res)=>{
+    res.render("findaclass", {
+        anon: req.anonymous,
+        open_rooms: await getOpenRoomsByCampus(req.params.campus),
+    });
+});
 
 app.all("*", (req,res)=>{
     sendError(req, res, 404);
-})
+});
 
 app.listen(80);
 

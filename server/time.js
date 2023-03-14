@@ -9,6 +9,8 @@ function stringToTime(s){
     }
     if(m == "P")
         r[0] = r[0] == 12 ? 12 : r[0] + 12;
+    if(m == "A" && r[0] == 12)
+        r[0] = 0;
     return r;
 }
 
@@ -21,7 +23,7 @@ function withinTimeRange(inputString, stringRange){
 
 function timeToNumber(timeString){
     let time = stringToTime(timeString);
-    return time[0]*60 + time[1];
+    return time[0]*60   + time[1];
 }
 
 module.exports = {

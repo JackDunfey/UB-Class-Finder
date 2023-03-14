@@ -1,6 +1,6 @@
 import requests
 import sqlite3
-
+import re;
 
 def getCoursesInDept(dept="CSE"):
     r = requests.get("https://www.buffalo.edu/class-schedule", params={
@@ -89,6 +89,12 @@ if __name__ == "__main__":
         cur.execute("BEGIN")
         for course in getCoursesInDept(dept):
             if course['Class'] == "Class":
+                continue
+            if bool(re.search(r"[B-LN-OQ-Z]", course['Time'])):
+                continue
+            if course['Room'] in ["", "REMOTE"]:
+                continue
+            if course["Location"].upper() == "REMOTE":
                 continue
             key = course['Class'] if course['Class'].isnumeric() else course['Course']+"-"+course['Section']
             cur.execute('''INSERT INTO classes (id,Class,Course,Title,Section,Type,Days,Time,Room,Location,Instructors,Status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)''',(key,course['Class'],course['Course'],course['Title'],course['Section'],course['Type'],course['Days'],course['Time'],course['Room'],course['Location'],course['Instructor (*) additional instructors'],course['Status']))

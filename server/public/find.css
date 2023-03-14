@@ -1,0 +1,19 @@
+#carousel{
+    height: 30vh;
+}
+#carousel .carousel-inner{
+    height: 100%;
+}
+#carousel .carousel-inner .carousel-item{
+    height: 100%;
+}
+#carousel .carousel-inner .carousel-item img{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+#map{
+    height: 70vh;
+    width: 70%;
+}
+
