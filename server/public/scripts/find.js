@@ -9,20 +9,42 @@ img.onload = () => {
 
 console.log("find.js loaded");
 
-document.getElementById("building").addEventListener("change", (event) => {
-    const building = event.target.value;
-    console.log(building);
+function populateOpenRoomsList(building){
     const url = `/api/${location.pathname.split("/").pop()}`;
     // TODO: Add building API
     fetch(url).then((response) => response.json()).then((rooms) => {
+        console.log("Building: " + building);
+        console.log(rooms.filter(room=>room.Room.includes(building)));
         let container = document.getElementById("room-container");
         container.innerHTML = "";
+        let i = 0;
+        let currentRow = document.createElement("div");
+        currentRow.className = "row";
         rooms.forEach((room) => {
-            if(room.Room.includes(building)) {
-                let roomElement = document.createElement("div");
-                roomElement.textContent = room.Room;
-                container.appendChild(roomElement);
+            if(!room.Room.includes(building))
+                return;
+            if(i % 2 == 0) {
+                container.append(currentRow);
+                currentRow = document.createElement("div");
+                currentRow.className = "row";
             }
+            let roomElement = document.createElement("div");
+                roomElement.className = "col-md-3";
+                roomElement.textContent = room.Room.split(" ").pop(); // <- def a better way to do this
+                currentRow.append(roomElement);
+            let meter = document.createElement("meter")
+                meter.className = "time_remaining my-1";
+                meter.min = 0, meter.max = 300;
+                meter.low = 60, meter.optimum = 120;
+                meter.value = room.timeDelta
+                meter.textContent = meter.title = Math.floor(room.timeDelta/60) + "h " + room.timeDelta%60 + "m remaining";
+                currentRow.append(meter);
+            i++;
         });
+        container.append(currentRow);
     });
+}
+
+document.getElementById("building").addEventListener("change", ({target}) => {
+    populateOpenRoomsList(target.value);
 });

@@ -8,18 +8,14 @@ html(lang="en")
         +stylesheet("/static/find.css")
         title Find a Classroom
     body 
-        .container-fluid
+        .container
             .row#carousel.carousel.slide
-                ol.carousel-indicators
-                    li(data-target="#carousel" data-slide-to="0")
-                    li.active(data-target="#carousel" data-slide-to="1")
-                    li(data-target="#carousel" data-slide-to="2")
                 .carousel-inner 
-                    .carousel-item
+                    .carousel-item(class=campus=="Downtown"?"active":"")
                         img.d-block.w-100(src="/static/images/DowntownCampus.jpg" alt="Downtown Campus")
-                    .carousel-item.active
+                    .carousel-item(class=campus=="North"?"active":"")
                         img.d-block.w-100(src="/static/images/NorthCampus.jpg" alt="North Campus")
-                    .carousel-item
+                    .carousel-item(class=campus=="South"?"active":"")
                         img.d-block.w-100(src="/static/images/SouthCampus.jpg" alt="South Campus")
                 a.carousel-control-prev(href="#carousel" role="button" data-slide="prev")
                     span.carousel-control-prev-icon(aria-hidden="true")
@@ -27,16 +23,43 @@ html(lang="en")
                 a.carousel-control-next(href="#carousel" role="button" data-slide="next")
                     span.carousel-control-next-icon(aria-hidden="true")
                     span.sr-only Next
-            .row.d-flex.justify-content-center.align-items-center 
-                h3 Open Classrooms
-            .row 
-                .col-md-7
+            .row(style="background-color: #272b2e;").text-white
+                .col-md-6
                     #map_room
                         canvas#canvas(width="800" height="800")
-                .col-md-5(style="border: 1px solid black;")
-                    h3 Building: 
-                        select#building
-                            option(value="NSC") NSC
-                            option(value="KNOX") Knox
+                .col-md-6.pt-2
+                    select#building
+                        option(value="") Select a Building
+                        option(value="ACADEM") Academic Complex 
+                        option(value="ALFIER") Alfiero Center
+                        option(value="ALUMNI") Alumni Arena
+                        //- option(value="AR") Art Building ????
+                        option(value="BAIRD") Baird Hall
+                        option(value="BALDY") Baldy Hall
+                        option(value="BELL") Bell Hall
+                        option(value="BONNER") Bonner Hall
+                        option(value="CAPEN") Capen Hall
+                        option(value="CFA") Center for the Arts 
+                        option(value="CLEMEN") Clemens Hall
+                        option(value="COOKE") Cooke Hall
+                        option(value="DAVIS") Davis Hall 
+                        option(value="FRNCZK") Fronczak Hall
+                        option(value="FURNAS") Furnas Hall
+                        option(value="FUTURE TERM") Future Term Building
+                        option(value="HOCH") Hochstetter Hall
+                        option(value="JACOBS") Jacobs Hall
+                        option(value="JARVIS") Jarvis Hall
+                        option(value="KNOX") Knox Hall
+                        option(value="MATH") Math Building
+                        option(value="NORTON") Norton Hall
+                        option(value="NSC") Natural Sciences Complex 
+                        option(value="OBRIAN") O'Brian Hall
+                        option(value="PARK") Park Hall
+                        option(value="SLEE") Slee Hall
+                        option(value="SPAULDING") Spaulding Hall
+                        option(value="TALBRT") Talbert Hall
+                        option(value="WILKESON") Wilkeson Hall
                     #room-container
             script(src="/static/scripts/find.js") 
+    //- Todo: replace meter with time on mobile devices / responsive
+    //- Make map clicks map to a building (will be awful)

@@ -1,5 +1,5 @@
 #carousel{
-    height: 30vh;
+    height: 25vh;
 }
 #carousel .carousel-inner{
     height: 100%;
@@ -14,4 +14,7 @@
 }
 #canvas{
     width: 100%;
+}
+body{
+    background-color: #2c2c2c !important;
 }

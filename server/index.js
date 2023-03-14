@@ -131,8 +131,10 @@ app.get("/find", verifyToken, async (req, res)=>{
 });
 
 app.get("/find/:campus", verifyToken, async (req, res)=>{
+    // Aboslutely no validation on campus
     res.render("findaclass", {
         anon: req.anonymous,
+        campus: req.params.campus,
         open_rooms: await getOpenRoomsByCampus(req.params.campus),
     });
 });
