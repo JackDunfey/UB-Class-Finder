@@ -8,7 +8,7 @@ html(lang="en")
         +stylesheet("/static/find.css")
         title Find a Classroom
     body 
-        .container
+        .container-fluid
             .row#carousel.carousel.slide
                 ol.carousel-indicators
                     li(data-target="#carousel" data-slide-to="0")
@@ -16,11 +16,11 @@ html(lang="en")
                     li(data-target="#carousel" data-slide-to="2")
                 .carousel-inner 
                     .carousel-item
-                        img.d-block.w-100(src="/static/photos/DowntownCampus.jpg" alt="Downtown Campus")
+                        img.d-block.w-100(src="/static/images/DowntownCampus.jpg" alt="Downtown Campus")
                     .carousel-item.active
-                        img.d-block.w-100(src="/static/photos/NorthCampus.jpg" alt="North Campus")
+                        img.d-block.w-100(src="/static/images/NorthCampus.jpg" alt="North Campus")
                     .carousel-item
-                        img.d-block.w-100(src="/static/photos/SouthCampus.jpg" alt="South Campus")
+                        img.d-block.w-100(src="/static/images/SouthCampus.jpg" alt="South Campus")
                 a.carousel-control-prev(href="#carousel" role="button" data-slide="prev")
                     span.carousel-control-prev-icon(aria-hidden="true")
                     span.sr-only Previous
@@ -29,21 +29,14 @@ html(lang="en")
                     span.sr-only Next
             .row.d-flex.justify-content-center.align-items-center 
                 h3 Open Classrooms
-            .text-center
-                mixin room_row(rooms)
-                    .form-row.d-flex.justify-content-center.align-items-center
-                        each room in rooms
-                            .col-md-2.pt-md-2
-                                p= room.Room
-                            .col-md-2.pb-md-2
-                                meter.time_remaining(min="0" max="400"
-                                    low="30" high="120" optimum="60"
-                                    value=room.timeDelta)
-                                span= room.timeDelta
-                -var elprow = 6
-                -var rows = Math.floor(open_rooms.length / elprow)
-                -var remainder = open_rooms.length % elprow
-                -var i = 0
-                -for (var j = 0; j < rows; j++)
-                    +room_row(open_rooms.slice(i, i + elprow))
-                    -i += elprow
+            .row 
+                .col-md-7
+                    #map_room
+                        canvas#canvas(width="800" height="800")
+                .col-md-5(style="border: 1px solid black;")
+                    h3 Building: 
+                        select#building
+                            option(value="NSC") NSC
+                            option(value="KNOX") Knox
+                    #room-container
+            script(src="/static/scripts/find.js") 

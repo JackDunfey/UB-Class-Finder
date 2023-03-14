@@ -12,8 +12,6 @@
     width: 100%;
     object-fit: cover;
 }
-#map{
-    height: 70vh;
-    width: 70%;
+#canvas{
+    width: 100%;
 }
-
