@@ -1,2 +1,3 @@
 cd C:\Users\jackd\OneDrive\Documents\GitHub\UB-Class-Finder\server
-npm test
+start /b npm test
+ngrok http 80

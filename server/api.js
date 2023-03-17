@@ -2,7 +2,7 @@ const { withinTimeRange, timeToNumber } = require("./time.js")
 
 const sql = require("sqlite3").verbose()
 function getOpenRoomsByCampus(campus="North"){
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, _) => {
         let d = new Date();
         let timeString = d.toLocaleTimeString('en-US', {hour: "numeric", minute: "numeric"});
         const db = new sql.Database('./ub_classes.sqlite');
@@ -10,18 +10,18 @@ function getOpenRoomsByCampus(campus="North"){
             db.all(`SELECT * FROM classes WHERE location = '${campus} Campus'`, (err, courses) => {
                 if(err)
                     throw err;
-                let distinct_least_until = [];
+                let distinct_least_until = {};
                 courses.filter(course=>{
                     let isTime = !/[^APM\-0-9:\s]+/g.test(course.Time) ? withinTimeRange(timeString, course.Time) : false;
                     let isDay = course.Days.split(" ").includes(["", "M", "T", "W", "R", "F", "S"][d.getDay()]);
                     return !(isTime && isDay);
                 }).forEach(course=>{
-                    let obj = {'Until': course.Time.split(" - ")[0], "timeDelta":  timeToNumber(course.Time.split(" - ")[0]) - timeToNumber(timeString), "Room": course.Room};
-                    if(~(idx=distinct_least_until.findIndex(e=>e.Room==obj.Room))){
-                        if(obj.timeDelta < distinct_least_until[idx].timeDelta)
-                            distinct_least_until[idx] = obj;
+                    let obj = {'Until': course.Time.split(" - ")[0], "timeDelta":  timeToNumber(course.Time.split(" - ")[0]) - timeToNumber(timeString)};
+                    if(distinct_least_until.hasOwnProperty(course.Room)){ // neq -1
+                        if(obj.timeDelta < distinct_least_until[course.Room].timeDelta)
+                            distinct_least_until[course.Room] = obj;
                     } else {
-                        distinct_least_until.push(obj);
+                        distinct_least_until[course.Room] = obj; // add obj if room has no entry
                     }
                 });
                 resolve(distinct_least_until);
